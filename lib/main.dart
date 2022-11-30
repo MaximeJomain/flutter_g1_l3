@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/database/database.dart';
-import 'package:flutter_g1_l3/login.dart';
-
+import 'package:flutter_g1_l3/view/actualites.dart';
+import 'package:flutter_g1_l3/database.dart';
+import 'package:flutter_g1_l3/view/login.dart';
+import 'package:flutter_g1_l3/view/event.dart';
+import 'package:flutter_g1_l3/view/concours.dart';
+import 'package:flutter_g1_l3/view/cours.dart';
 
 void main() async {
   runApp(const MyApp());
   WidgetsFlutterBinding.ensureInitialized();
-  // await MongoDatabase.connect();
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +20,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       routes: {
-        LoginPage.tag : (context)=>const LoginPage(title: "login")
+        LoginPage.tag : (context) => const LoginPage(title: "login"),
+        EventPage.tag : (context) => const EventPage(title: "event"),
+        ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
+        CoursPage.tag : (context) => const ConcoursPage(title: "cours"),
+        ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
+
       },
       theme: ThemeData(
         // This is the theme of your application.
@@ -87,7 +94,23 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
                 color: Colors.white,
                 onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
+                icon: const Icon(Icons.login)),
+            IconButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pushNamed(ActualitePage.tag),
                 icon: const Icon(Icons.home)),
+            IconButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pushNamed(EventPage.tag),
+                icon: const Icon(Icons.event)),
+            IconButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pushNamed(ConcoursPage.tag),
+                icon: const Icon(Icons.stars)),
+            IconButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pushNamed(CoursPage.tag),
+                icon: const Icon(Icons.book)),
           ],
             )
         ),
@@ -112,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'page inscription in progress',
             ),
             Text(
               '$_counter',
@@ -121,11 +144,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
