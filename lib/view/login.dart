@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/main.dart';
-import 'user.dart';
 
 class LoginPage extends StatefulWidget {
 
   static const tag = "login_page";
 
   const LoginPage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -25,31 +15,24 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  // checkUser() async {
-  //   var db = await MongoDatabase.connect();
-  //   var collection = db.collection(COLLECTION_USERS);
-  //   return db;
-  // }
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
 
-  void isFindUser() async  {
+  Future<void> isFindUser() async {
 
     setState(() {
       List result = MyApp.myDB.getCollection("users");
-      result.forEach((element) {
+      for (var element in result) {
         Map<String, dynamic> myMap = element;
         myMap.forEach((key, value) {
           if(key.contains("username")){
             if(usernameController.value == value) print("userFind");
+            print("nofund");
           }
         });
-        //print(element);
-      });
-      //Map tab = MyApp.myDB.getCollection("users");
+      }
       print("test");
     });
   }
@@ -86,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: () {
                       isFindUser();
-
                     },
                     child: const Text('Submit'),
                   ),

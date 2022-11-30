@@ -1,11 +1,13 @@
-import 'package:flutter_g1_l3/main.dart';
-
 class User {
 
   late String username;
   late String password;
+  late String picture;
+  late BigInt phone;
+  late BigInt old;
+  late String type;
 
-  User(this.username, this.password);
+  User(this.username, this.password, this.picture, this.phone, this.old, this.type);
 
   String get getUsername => username;
   set setUsername(String aValue) => username = aValue;

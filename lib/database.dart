@@ -17,18 +17,15 @@ class Database{
   getCollection(String myCollec) async{
     if(db == null){
       await _etablishConnection();
-      print("nouvelle connexion");
     }
     DbCollection collection = await db.collection(myCollec);
     List result = await collection.find().toList();
-
     return result;
   }
 
   pushDatainDB(String myCollec, String data) async{
     if(db == null){
       await _etablishConnection();
-      print("nouvelle connexion");
     }
     // Add ligne spéfique Insert
   }
