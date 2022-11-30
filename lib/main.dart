@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_g1_l3/database/database.dart';
+import 'package:flutter_g1_l3/login.dart';
 
-void main() {
+
+void main() async {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // await MongoDatabase.connect();
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  static final myDB = Database("test", "test", "cluster0.ntf6xn4.mongodb.net", "test");
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      routes: {
+        LoginPage.tag : (context)=>const LoginPage(title: "login")
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -71,10 +79,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Row(
+            mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            IconButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
+                icon: const Icon(Icons.home)),
+          ],
+            )
+        ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
