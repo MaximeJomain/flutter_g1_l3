@@ -36,10 +36,6 @@ class _ActualitePageState extends State<ActualitePage> {
             children: <Widget>[
               IconButton(
                   color: Colors.white,
-                  onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
-                  icon: const Icon(Icons.login)),
-              IconButton(
-                  color: Colors.white,
                   onPressed: () => Navigator.of(context).pushNamed(ActualitePage.tag),
                   icon: const Icon(Icons.home)),
               IconButton(

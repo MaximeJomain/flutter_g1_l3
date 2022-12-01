@@ -1,10 +1,17 @@
 class Event {
 
-  late String picture;
   late String type;
-  late Map participants;
-  late Map commentaires;
+  // late Map participants;
+  // late DateTime date;
+       bool validate;
 
-  Event(this.picture, this.type, this.participants, this.commentaires);
+  Event(this.type,
+      // this.participants,
+      // this.date,
+      this.validate);
 
+  String get getType => type;
+  set setType(String aValue) => type = aValue;
+  bool get getValidate => validate;
+  set setValidate(bool aValue) => validate = true;
 }

@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         LoginPage.tag : (context) => const LoginPage(title: "login"),
         EventPage.tag : (context) => const EventPage(title: "event"),
         ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
-        CoursPage.tag : (context) => const ConcoursPage(title: "cours"),
+        CoursPage.tag : (context) => const CoursPage(title: "cours"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
 
       },
