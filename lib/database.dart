@@ -1,4 +1,6 @@
 import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/tables/tableConcours.dart';
+
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Database{
@@ -41,6 +43,20 @@ class Database{
       "phone":"${user.phone}",
       "old": "${user.old}",
       "type": "${user.type}"
+    });
+  }
+  createConcours(String myCollec, Concours concours) async{
+    if(db == null){
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "username": "${concours.name}",
+      "password": "${concours.adress}",
+      "picture": "${concours.picture}",
+      "email": "${concours.date}"
     });
   }
 
