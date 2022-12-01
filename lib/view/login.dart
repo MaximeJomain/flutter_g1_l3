@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/main.dart';
+import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/view/actualites.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class LoginPage extends StatefulWidget {
 
@@ -19,23 +22,25 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-
-  Future<void> isFindUser() async {
-
-    setState(() {
-      List result = MyApp.myDB.getCollection("users");
-      for (var element in result) {
-        Map<String, dynamic> myMap = element;
-        myMap.forEach((key, value) {
-          if(key.contains("username")){
-            if(usernameController.value == value) print("userFind");
-            print("nofund");
-          }
-        });
-      }
-      print("test");
-    });
+  List<User> usersList = [];
+  Future<List<User>> isFindUser() async {
+    List result = await MyApp.myDB.getCollection("users");
+    for (var item in result) {
+      final user = User(item['username'], item['password'], item['picture'], item['phone'], item['old'], item['type']);
+      usersList.add(user);
+    }
+    return usersList;
   }
+
+  checkUsers() {
+    for (var user in usersList) {
+      if(user.username == usernameController.text &&
+          user.password == passwordController.text) {
+        print("user connected");
+        Navigator.of(context).pushNamed(ActualitePage.tag);
+    } else {print("error");}
+    }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: () {
                       isFindUser();
+                      checkUsers();
                     },
                     child: const Text('Submit'),
                   ),

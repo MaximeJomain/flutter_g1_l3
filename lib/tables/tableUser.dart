@@ -3,8 +3,8 @@ class User {
   late String username;
   late String password;
   late String picture;
-  late BigInt phone;
-  late BigInt old;
+  late int phone;
+  late int old;
   late String type;
 
   User(this.username, this.password, this.picture, this.phone, this.old, this.type);
