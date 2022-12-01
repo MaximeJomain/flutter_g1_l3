@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
-import 'package:flutter_g1_l3/view/actualites.dart';
+
+import '../tables/tableHorse.dart';
 
 class UserProfile extends StatefulWidget {
   static const tag = "user_profile_page";
@@ -16,31 +17,104 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<Horse> horsesList = [];
+  String? gender;
+  String? _horseName;
 
-  // List<User> usersList = [];
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController ffeLinkController = TextEditingController();
-  String? gender;
 
-  // Future<List<User>> isFindUser() async {
-  //   List result = await MyApp.myDB.getCollection("users");
-  //   for (var item in result) {
-  //     final user = User(item['username'], item['password'], item['picture'],
-  //         item['email'], item['phone'], item['old'], item['type']);
-  //     usersList.add(user);
-  //   }
-  //   return usersList;
-  // }
+  Future<List<Horse>> getHorsesList() async {
+    List result = await MyApp.myDB.getCollection("horses");
+    if (horsesList.isEmpty) {
+      for (var item in result) {
+        final horse = Horse(item['name']);
+        horsesList.add(horse);
+      }
+    }
+    print(horsesList);
+    return horsesList;
+  }
 
-  // checkUsers() {
-  //   for (var e in usersList) {
-  //     if (e.username == usernameController.text &&
-  //         e.password == passwordController.text) {
-  //       Navigator.of(context).pushNamed(ActualitePage.tag);
-  //     }
-  //   }
-  // }
+  Future<void> _dpDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        String? horseName = _horseName;
+        return AlertDialog(
+          title: const Text('Veuillez sélectionner votre cheval'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Container(
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: horsesList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return RadioListTile(
+                            title: Text(horsesList[index].name),
+                            value: horsesList[index].name,
+                            groupValue: horseName,
+                            onChanged: (value) {
+                              setState(() {
+                                horseName = value.toString();
+                                _horseName = value.toString();
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _ownerDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('This is a demo alert dialog.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,20 +158,24 @@ class _UserProfileState extends State<UserProfile> {
                         title: Text("Demi-Pension"),
                         value: "dp",
                         groupValue: gender,
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             gender = value.toString();
                           });
+                          await getHorsesList();
+                          _dpDialog();
                         },
                       ),
                       RadioListTile(
                         title: Text("Propriétaire"),
                         value: "owner",
                         groupValue: gender,
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             gender = value.toString();
                           });
+                          await getHorsesList();
+                          _ownerDialog();
                         },
                       ),
                     ],
