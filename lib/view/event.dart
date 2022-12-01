@@ -44,11 +44,11 @@ class _EventPageState extends State<EventPage> {
     return eventList; // et ici tu renvoies la variable
   }
 
-  @override
-  void initState() {
-    print(eventList);
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   print(eventList);
+  //   super.initState();
+  // }
 
   EventName? event = EventName.dancefloor;
   // EventName? _event = event.substring(10);
@@ -62,23 +62,25 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-            FutureBuilder(
-                future: isFindEvent(),
-                builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
-                  if (snapshot.hasData) { // ici tu vérifie si tu recois bien de la donnée
-                    print(snapshot.data); // tu print ta données
-                    return Container(); // pour le moment retourne juste un container vide
-                  } else if (snapshot.hasError) { // ici s'il y a une erreur
-                    print(snapshot.error);
-                    return Container();
-                  } else {
-                    // Et ici s'il n y a pas encore de la donnée tu retourne quelque chose
-                    return Container();
-                  }
-                }
-            )
-        ),
+      body: FutureBuilder(
+        future: isFindEvent(),
+        builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+          if (snapshot.hasData) { // ici tu vérifie si tu recois bien de la donnée
+            return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (_, index) {
+                  return Text("${snapshot.data?[index].getType}");
+                });
+            return Container(); // pour le moment retourne juste un container vide
+          } else if (snapshot.hasError) { // ici s'il y a une erreur
+            print(snapshot.error);
+            return Container();
+          } else {
+            // Et ici s'il n y a pas encore de la donnée tu retourne quelque chose
+            return Container();
+          }
+        },
+      ),
       floatingActionButton: Row(
          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
          children: <Widget>[
@@ -140,7 +142,7 @@ class _EventPageState extends State<EventPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Database.instance
-                            .createEvent("event", Event("${_event}", false));
+                            .createEvent("event", Event("${event}", false));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
