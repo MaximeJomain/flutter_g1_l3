@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/main.dart';
-import 'package:flutter_g1_l3/tables/tableUser.dart';
-import 'package:get_storage/get_storage.dart';
 
 import '../tables/tableHorse.dart';
 
@@ -152,6 +149,12 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -282,7 +285,7 @@ class _UserProfileState extends State<UserProfile> {
                                         const ListTile(
                                           leading: Icon(Icons.album),
                                           title:
-                                              Text('The Enchanted Nightingale'),
+                                              Text(ownerHorses[index].name),
                                           subtitle: Text(
                                               'Music by Julie Gable. Lyrics by Sidney Stein.'),
                                         ),
