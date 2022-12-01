@@ -1,4 +1,7 @@
+import 'package:flutter_g1_l3/tables/tableEvent.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/tables/tableConcours.dart';
+
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Database {
@@ -36,43 +39,42 @@ class Database {
     var collection = db.collection(myCollec);
     await collection.insertOne({
       "_id": ObjectId(),
-      "username": "${user.username}",
-      "password": "${user.password}",
-      "picture": "${user.picture}",
-      "email": "${user.email}",
-      "phone": "${user.phone}",
-      "old": "${user.old}",
-      "type": "${user.type}"
+      "username": user.username,
+      "password": user.password,
+    "picture": user.picture,
+      "email": user.email,
+      "phone":user.phone,
+      "old": user.old,
+      "type": user.type
+    });
+  }
+  createConcours(String myCollec, Concours concours) async{
+    if(db == null){
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "username": "${concours.name}",
+      "password": "${concours.adress}",
+      "picture": "${concours.picture}",
+      "email": "${concours.date}"
     });
   }
 
-  updateHorseOwner(String username, String? horsename) async {
-    if (db == null) {
+  createEvent(String myCollec, Event event) async{
+    if(db == null){
       await _etablishConnection();
       print("nouvelle connexion");
     }
-    var collection = db.collection("horses");
-    await collection.update(
-        where.eq('name', horsename), modify.set('owner', username));
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "type": event.type,
+      // "participants": event.participants,
+      "validate": event.validate,
+    });
   }
 
-  updateUserInfo(String username, String phoneNumber, String age, String ffe) async {
-    if (db == null) {
-      await _etablishConnection();
-      print("nouvelle connexion");
-    }
-    var collection = db.collection("users");
-    await collection.update(
-        where.eq('username', username),
-        {
-          r'$set': {
-            'phone_number': phoneNumber,
-            'age': age,
-            'ffe': ffe,
-          }
-        }
-    );
-  }
-
-// Ajouter fonction générique Delete / Update
 }
