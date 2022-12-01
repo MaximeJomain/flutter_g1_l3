@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
 
@@ -17,6 +18,8 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String username = "user1";
   List<Horse> horsesList = [];
   String? gender;
   String? _horseName;
@@ -79,6 +82,7 @@ class _UserProfileState extends State<UserProfile> {
             TextButton(
               child: const Text('Approve'),
               onPressed: () {
+                MyApp.myDB.updateHorseOwner(username, horseName);
                 Navigator.of(context).pop();
               },
             ),
@@ -183,7 +187,12 @@ class _UserProfileState extends State<UserProfile> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        MyApp.myDB.updateUserInfo(username, phoneNumberController.text , ageController.text, ffeLinkController.text);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(
+                                'Vos informations on bien été modifiées')));
+                      },
                       child: const Text('Submit'),
                     ),
                   ),
