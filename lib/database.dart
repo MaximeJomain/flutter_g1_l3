@@ -1,3 +1,4 @@
+import 'package:flutter_g1_l3/tables/tableUser.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Database{
@@ -8,6 +9,8 @@ class Database{
   var db;
 
   Database(this.user, this.pwd, this.host, this.nameDB);
+
+  static Database instance = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
 
   _etablishConnection() async{
     db = await Db.create("mongodb+srv://${user}:${pwd}@${host}/${nameDB}?retryWrites=true&w=majority");
@@ -23,11 +26,22 @@ class Database{
     return result;
   }
 
-  pushDatainDB(String myCollec, String data) async{
+  createUser(String myCollec, User user) async{
     if(db == null){
       await _etablishConnection();
+      print("nouvelle connexion");
     }
-    // Add ligne spéfique Insert
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "username": "${user.username}",
+      "password": "${user.password}",
+    "picture": "${user.picture}",
+      "email": "${user.email}",
+      "phone":"${user.phone}",
+      "old": "${user.old}",
+      "type": "${user.type}"
+    });
   }
 
 

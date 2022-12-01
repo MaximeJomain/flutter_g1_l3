@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/database/database.dart';
-import 'dart:io';
-
-import 'package:flutter_g1_l3/user.dart';
+import 'package:flutter_g1_l3/database.dart';
+import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/view/login.dart';
 
 
 class MySignupPage extends StatefulWidget{
@@ -18,16 +17,9 @@ class _MySignupPageState extends State<MySignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MySigninPage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: const MyStatefulWidget(),
@@ -52,7 +44,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
-    final TextEditingController imageController = TextEditingController();
+    final TextEditingController pictureController = TextEditingController();
 
     return Form(
       key: _formKey,
@@ -104,7 +96,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
                 Divider(),
                 TextFormField(
-                  controller: imageController,
+                  controller: pictureController,
                   decoration: const InputDecoration(
                     hintText: "Entrez le lien d'une image",
                   ),
@@ -123,16 +115,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       // the form is invalid.
                       if (_formKey.currentState!.validate()) {
                         // Process data.
-                        Database.instance.createUser("users", User(usernameController.text, passwordController.text, emailController.text, imageController.text));
+                        Database.instance.createUser("users", User(usernameController.text, passwordController.text, pictureController.text, emailController.text, "", "", ""));
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text(
                                 'Votre compte a bien été crée')));
-                      //Navigator.of(context).pushNamed(LoginPage.tag);
+                      Navigator.of(context).pushNamed(LoginPage.tag);
                       }
                     },
                     child: const Text('Submit'),
                   ),
                 ),
+                IconButton(
+                    color: Colors.black,
+                    onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
+                    icon: const Icon(Icons.book)),
               ],
             ),
           ),
