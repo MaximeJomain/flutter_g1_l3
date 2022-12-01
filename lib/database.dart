@@ -77,4 +77,32 @@ class Database {
     });
   }
 
+
+  updateHorseOwner(String username, String? horsename) async {
+    if (db == null) {
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection("horses");
+    await collection.update(
+        where.eq('name', horsename), modify.set('owner', username));
+  }
+
+  updateUserInfo(String username, String phoneNumber, String age, String ffe) async {
+    if (db == null) {
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection("users");
+    await collection.update(
+        where.eq('username', username),
+        {
+          r'$set': {
+            'phone_number': phoneNumber,
+            'age': age,
+            'ffe': ffe,
+          }
+        }
+    );
+  }
 }
