@@ -1,3 +1,4 @@
+import 'package:flutter_g1_l3/tables/tableEvent.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
 import 'package:flutter_g1_l3/tables/tableConcours.dart';
 
@@ -36,13 +37,13 @@ class Database{
     var collection = db.collection(myCollec);
     await collection.insertOne({
       "_id": ObjectId(),
-      "username": "${user.username}",
-      "password": "${user.password}",
-    "picture": "${user.picture}",
-      "email": "${user.email}",
-      "phone":"${user.phone}",
-      "old": "${user.old}",
-      "type": "${user.type}"
+      "username": user.username,
+      "password": user.password,
+    "picture": user.picture,
+      "email": user.email,
+      "phone":user.phone,
+      "old": user.old,
+      "type": user.type
     });
   }
   createConcours(String myCollec, Concours concours) async{
@@ -60,6 +61,18 @@ class Database{
     });
   }
 
+  createEvent(String myCollec, Event event) async{
+    if(db == null){
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "type": event.type,
+      // "participants": event.participants,
+      "validate": event.validate,
+    });
+  }
 
-  // Ajouter fonction générique Delete / Update
 }
