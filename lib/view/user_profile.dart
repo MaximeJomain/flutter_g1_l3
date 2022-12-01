@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../tables/tableHorse.dart';
 
@@ -19,9 +20,11 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  List<bool?> _isChecked = [];
   String username = "user1";
   List<Horse> horsesList = [];
-  String? gender;
+  List<String> selectedHorses = [];
+  String? _type;
   String? _horseName;
 
   final TextEditingController phoneNumberController = TextEditingController();
@@ -49,35 +52,35 @@ class _UserProfileState extends State<UserProfile> {
         return AlertDialog(
           title: const Text('Veuillez sélectionner votre cheval'),
           content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return SingleChildScrollView(
-                child: Container(
-                  width: double.maxFinite,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: horsesList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return RadioListTile(
-                            title: Text(horsesList[index].name),
-                            value: horsesList[index].name,
-                            groupValue: horseName,
-                            onChanged: (value) {
-                              setState(() {
-                                horseName = value.toString();
-                                _horseName = value.toString();
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ],
+              builder: (BuildContext context, StateSetter setState) {
+                return SingleChildScrollView(
+                  child: Container(
+                    width: double.maxFinite,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: horsesList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return RadioListTile(
+                              title: Text(horsesList[index].name),
+                              value: horsesList[index].name,
+                              groupValue: horseName,
+                              onChanged: (value) {
+                                setState(() {
+                                  horseName = value.toString();
+                                  _horseName = value.toString();
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
           actions: <Widget>[
             TextButton(
               child: const Text('Approve'),
@@ -95,18 +98,38 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> _ownerDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
+          title: const Text('Veuillez sélectionner votre cheval'),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return SingleChildScrollView(
+                  child: Container(
+                    width: double.maxFinite,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: horsesList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return CheckboxListTile(
+                              title: Text(horsesList[index].name),
+                              value: _isChecked[index],
+                              onChanged: (value) {
+                                setState(() {
+                                  _isChecked[index] = value;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
           actions: <Widget>[
             TextButton(
               child: const Text('Approve'),
@@ -124,12 +147,14 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(widget.title),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            const Padding(padding: EdgeInsets.all(12.0)),
             Form(
               key: _formKey,
               child: Column(
@@ -155,16 +180,18 @@ class _UserProfileState extends State<UserProfile> {
                       labelText: 'Lien FFE',
                     ),
                   ),
-                  Divider(),
+                  const Padding(padding: EdgeInsets.all(12.0)),
+                  const Divider(),
+                  const Padding(padding: EdgeInsets.all(12.0)),
                   Column(
                     children: [
                       RadioListTile(
                         title: Text("Demi-Pension"),
                         value: "dp",
-                        groupValue: gender,
+                        groupValue: _type,
                         onChanged: (value) async {
                           setState(() {
-                            gender = value.toString();
+                            _type = value.toString();
                           });
                           await getHorsesList();
                           _dpDialog();
@@ -173,12 +200,15 @@ class _UserProfileState extends State<UserProfile> {
                       RadioListTile(
                         title: Text("Propriétaire"),
                         value: "owner",
-                        groupValue: gender,
+                        groupValue: _type,
                         onChanged: (value) async {
                           setState(() {
-                            gender = value.toString();
+                            _type = value.toString();
                           });
                           await getHorsesList();
+                          if (_isChecked.isEmpty) {
+                            _isChecked = List<bool>.filled(horsesList.length, false);
+                          }
                           _ownerDialog();
                         },
                       ),
@@ -188,7 +218,9 @@ class _UserProfileState extends State<UserProfile> {
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        MyApp.myDB.updateUserInfo(username, phoneNumberController.text , ageController.text, ffeLinkController.text);
+                        MyApp.myDB.updateUserInfo(
+                            username, phoneNumberController.text,
+                            ageController.text, ffeLinkController.text);
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text(
                                 'Vos informations on bien été modifiées')));

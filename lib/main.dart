@@ -29,13 +29,13 @@ class MyApp extends StatelessWidget {
         ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
         CoursPage.tag : (context) => const ConcoursPage(title: "cours"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
-        UserProfile.tag : (context) => const UserProfile(title: "page de profil"),
+        UserProfile.tag : (context) => const UserProfile(title: "Page de profil"),
       },
       theme: ThemeData(
 
         primarySwatch: Colors.blue,
       ),
-      home: const UserProfile(title: "page de profil") //MySignupPage(title: "Page d'inscription"),
+      home: const UserProfile(title: "Page de profil") //MySignupPage(title: "Page d'inscription"),
     );
   }
 }
