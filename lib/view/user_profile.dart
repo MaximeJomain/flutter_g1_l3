@@ -21,7 +21,7 @@ class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<bool?> _isChecked = [];
-  String username = "user1";
+  String username = "user2";
   List<Horse> horsesList = [];
   List<String> selectedHorses = [];
   String? _type;
@@ -53,34 +53,34 @@ class _UserProfileState extends State<UserProfile> {
           title: const Text('Veuillez sélectionner votre cheval'),
           content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                return SingleChildScrollView(
-                  child: Container(
-                    width: double.maxFinite,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: horsesList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return RadioListTile(
-                              title: Text(horsesList[index].name),
-                              value: horsesList[index].name,
-                              groupValue: horseName,
-                              onChanged: (value) {
-                                setState(() {
-                                  horseName = value.toString();
-                                  _horseName = value.toString();
-                                });
-                              },
-                            );
+            return SingleChildScrollView(
+              child: Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: horsesList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return RadioListTile(
+                          title: Text(horsesList[index].name),
+                          value: horsesList[index].name,
+                          groupValue: horseName,
+                          onChanged: (value) {
+                            setState(() {
+                              horseName = value.toString();
+                              _horseName = value.toString();
+                            });
                           },
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                );
-              }),
+                  ],
+                ),
+              ),
+            );
+          }),
           actions: <Widget>[
             TextButton(
               child: const Text('Approve'),
@@ -104,36 +104,44 @@ class _UserProfileState extends State<UserProfile> {
           title: const Text('Veuillez sélectionner votre cheval'),
           content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                return SingleChildScrollView(
-                  child: Container(
-                    width: double.maxFinite,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: horsesList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return CheckboxListTile(
-                              title: Text(horsesList[index].name),
-                              value: _isChecked[index],
-                              onChanged: (value) {
-                                setState(() {
-                                  _isChecked[index] = value;
-                                });
-                              },
-                            );
+            return SingleChildScrollView(
+              child: Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: horsesList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CheckboxListTile(
+                          title: Text(horsesList[index].name),
+                          value: _isChecked[index],
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked[index] = value;
+                              if (_isChecked[index] == true) {
+                                selectedHorses.add(horsesList[index].name);
+                              } else if (_isChecked[index] == false) {
+                                selectedHorses.remove(horsesList[index].name);
+                              }
+                            });
                           },
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                );
-              }),
+                  ],
+                ),
+              ),
+            );
+          }),
           actions: <Widget>[
             TextButton(
               child: const Text('Approve'),
               onPressed: () {
+                for (var horseName in selectedHorses) {
+                  MyApp.myDB.updateHorseOwner(username, horseName);
+                }
                 Navigator.of(context).pop();
               },
             ),
@@ -150,88 +158,169 @@ class _UserProfileState extends State<UserProfile> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const Padding(padding: EdgeInsets.all(12.0)),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: phoneNumberController,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Numéro de téléphone',
-                    ),
-                  ),
-                  TextFormField(
-                    controller: ageController,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Age',
-                    ),
-                  ),
-                  TextFormField(
-                    controller: ffeLinkController,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Lien FFE',
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(12.0)),
-                  const Divider(),
-                  const Padding(padding: EdgeInsets.all(12.0)),
-                  Column(
-                    children: [
-                      RadioListTile(
-                        title: Text("Demi-Pension"),
-                        value: "dp",
-                        groupValue: _type,
-                        onChanged: (value) async {
-                          setState(() {
-                            _type = value.toString();
-                          });
-                          await getHorsesList();
-                          _dpDialog();
-                        },
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.all(12.0)),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      controller: phoneNumberController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Numéro de téléphone',
                       ),
-                      RadioListTile(
-                        title: Text("Propriétaire"),
-                        value: "owner",
-                        groupValue: _type,
-                        onChanged: (value) async {
-                          setState(() {
-                            _type = value.toString();
-                          });
-                          await getHorsesList();
-                          if (_isChecked.isEmpty) {
-                            _isChecked = List<bool>.filled(horsesList.length, false);
-                          }
-                          _ownerDialog();
-                        },
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        MyApp.myDB.updateUserInfo(
-                            username, phoneNumberController.text,
-                            ageController.text, ffeLinkController.text);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text(
-                                'Vos informations on bien été modifiées')));
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez rentrer un numéro de téléphone";
+                        }
+                        return null;
                       },
-                      child: const Text('Submit'),
                     ),
-                  ),
-                ],
+                    TextFormField(
+                      controller: ageController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Age',
+                      ),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez rentrer un âge";
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: ffeLinkController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Lien FFE',
+                      ),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez rentrer un lien ffe";
+                        }
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            MyApp.myDB.updateUserInfo(
+                                username,
+                                phoneNumberController.text,
+                                ageController.text,
+                                ffeLinkController.text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Vos informations on bien été modifiées')));
+                          }
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    ),
+                    const Divider(),
+                    const Padding(padding: EdgeInsets.all(12.0)),
+                    Column(
+                      children: [
+                        RadioListTile(
+                          title: Text("Demi-Pension"),
+                          value: "dp",
+                          groupValue: _type,
+                          onChanged: (value) async {
+                            setState(() {
+                              _type = value.toString();
+                            });
+                            await getHorsesList();
+                            _dpDialog();
+                          },
+                        ),
+                        RadioListTile(
+                          title: Text("Propriétaire"),
+                          value: "owner",
+                          groupValue: _type,
+                          onChanged: (value) async {
+                            setState(() {
+                              _type = value.toString();
+                            });
+                            await getHorsesList();
+                            if (_isChecked.isEmpty) {
+                              _isChecked =
+                                  List<bool>.filled(horsesList.length, false);
+                            }
+                            print(selectedHorses);
+                            _ownerDialog();
+                          },
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    const Padding(padding: EdgeInsets.all(12.0)),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return SingleChildScrollView(
+                        child: Container(
+                          width: double.maxFinite,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const ListTile(
+                                          leading: Icon(Icons.album),
+                                          title:
+                                              Text('The Enchanted Nightingale'),
+                                          subtitle: Text(
+                                              'Music by Julie Gable. Lyrics by Sidney Stein.'),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            TextButton(
+                                              child: const Text('BUY TICKETS'),
+                                              onPressed: () {
+                                                /* ... */
+                                              },
+                                            ),
+                                            const SizedBox(width: 8),
+                                            TextButton(
+                                              child: const Text('LISTEN'),
+                                              onPressed: () {
+                                                /* ... */
+                                              },
+                                            ),
+                                            const SizedBox(width: 8),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
