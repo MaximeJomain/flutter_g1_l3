@@ -19,44 +19,27 @@ enum EventName { dancefloor, jeux, repas }
 class _EventPageState extends State<EventPage> {
   List<Event> eventList = [];
 
-  // Future<List<Event>> isFindEvent() async {
-  //   print("fonction ok");
-  //     final result = await MyApp.myDB.getCollection("event");
-  //     print(result);
-  //     for (var item in result) {
-  //       final event = Event(item['type'], item['validate']);
-  //       eventList.add(event);
-  //     }
-  //   print(eventList);
-  //   return eventList;
-  // }
-
   Future<List<Event>> isFindEvent() async {
-    List<Event> eventList = []; // la variable que tu dois créer
-    print("fonction ok");
+    List<Event> eventList = [];
     final result = await MyApp.myDB.getCollection("event");
-    print(result);
     for (var item in result) {
       final event = Event(item['type'], item['validate']);
-      eventList.add(event); // ici tu remplace par la variable
+      eventList.add(event);
     }
-    print(eventList);
-    return eventList; // et ici tu renvoies la variable
+    return eventList;
   }
 
-  // @override
-  // void initState() {
-  //   print(eventList);
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    isFindEvent();
+    super.initState();
+  }
 
   EventName? event = EventName.dancefloor;
-  // EventName? _event = event.substring(10);
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController typeController = TextEditingController();
   final TextEditingController participantsController = TextEditingController();
-  final TextEditingController commentairesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +48,49 @@ class _EventPageState extends State<EventPage> {
       body: FutureBuilder(
         future: isFindEvent(),
         builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
-          if (snapshot.hasData) { // ici tu vérifie si tu recois bien de la donnée
+          if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data?.length,
-                itemBuilder: (_, index) {
-                  return Text("${snapshot.data?[index].getType}");
-                });
-            return Container(); // pour le moment retourne juste un container vide
-          } else if (snapshot.hasError) { // ici s'il y a une erreur
-            print(snapshot.error);
+                itemBuilder: (_, index)  {
+                  var theme = snapshot.data?[index].getType.substring(10);
+                  return Card(
+                    child: SizedBox(
+                      height: 150,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                height: 120,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                ),
+                                child: Image.asset("assets/images/jeux.jpeg",
+                                  height: 120,
+                                  width: 120)
+                              ),
+                              Column(
+                                  children: [
+                                    Padding(padding: EdgeInsets.all(5),
+                                      child: Text(theme!,
+                                      style: const TextStyle(fontWeight: FontWeight.bold))),
+                                    const Padding(padding: EdgeInsets.all(5),
+                                        child: Text("Nombre de participants: ?")),
+                              ])
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+            );
+          } else if (snapshot.hasError) {
             return Container();
           } else {
-            // Et ici s'il n y a pas encore de la donnée tu retourne quelque chose
             return Container();
           }
         },
@@ -86,7 +100,7 @@ class _EventPageState extends State<EventPage> {
          children: <Widget>[
          FloatingActionButton(
              onPressed: () {
-              // _isFindEvent();
+              isFindEvent();
         },
            tooltip: "refresh list",
            backgroundColor: Colors.purple,
