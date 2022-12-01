@@ -6,6 +6,7 @@ import 'package:flutter_g1_l3/view/login.dart';
 import 'package:flutter_g1_l3/view/event.dart';
 import 'package:flutter_g1_l3/view/concours.dart';
 import 'package:flutter_g1_l3/view/cours.dart';
+import 'package:flutter_g1_l3/view/user_profile.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -26,13 +27,13 @@ class MyApp extends StatelessWidget {
         ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
         CoursPage.tag : (context) => const ConcoursPage(title: "cours"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
-
+        UserProfile.tag : (context) => const UserProfile(title: "page de profil"),
       },
       theme: ThemeData(
 
         primarySwatch: Colors.blue,
       ),
-      home: MySignupPage(title: "Page d'inscription"),
+      home: const UserProfile(title: "page de profil") //MySignupPage(title: "Page d'inscription"),
     );
   }
 }
