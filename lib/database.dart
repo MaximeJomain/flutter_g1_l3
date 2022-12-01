@@ -4,7 +4,7 @@ import 'package:flutter_g1_l3/tables/tableConcours.dart';
 
 import 'package:mongo_dart/mongo_dart.dart';
 
-class Database{
+class Database {
   String user;
   String pwd;
   String host;
@@ -13,15 +13,17 @@ class Database{
 
   Database(this.user, this.pwd, this.host, this.nameDB);
 
-  static Database instance = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
+  static Database instance =
+      Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test");
 
-  _etablishConnection() async{
-    db = await Db.create("mongodb+srv://${user}:${pwd}@${host}/${nameDB}?retryWrites=true&w=majority");
+  _etablishConnection() async {
+    db = await Db.create(
+        "mongodb+srv://${user}:${pwd}@${host}/${nameDB}?retryWrites=true&w=majority");
     await db.open();
   }
 
-  getCollection(String myCollec) async{
-    if(db == null){
+  getCollection(String myCollec) async {
+    if (db == null) {
       await _etablishConnection();
     }
     DbCollection collection = await db.collection(myCollec);
@@ -29,8 +31,8 @@ class Database{
     return result;
   }
 
-  createUser(String myCollec, User user) async{
-    if(db == null){
+  createUser(String myCollec, User user) async {
+    if (db == null) {
       await _etablishConnection();
       print("nouvelle connexion");
     }

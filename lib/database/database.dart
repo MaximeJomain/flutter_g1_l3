@@ -8,7 +8,6 @@ class Database{
   String nameDB;
   var db;
 
-  static Database instance = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
 
   Database(this.user, this.pwd, this.host, this.nameDB);
 
@@ -51,7 +50,6 @@ class Database{
       "image": "${user.image}"
     });
 }
-
 
 // Ajouter fonction générique Delete / Update
 }
