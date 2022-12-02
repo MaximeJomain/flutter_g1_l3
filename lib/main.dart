@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/database.dart';
+import 'package:flutter_g1_l3/view/admin.dart';
 import 'package:flutter_g1_l3/view/sign_up.dart';
 import 'package:flutter_g1_l3/view/actualites.dart';
 import 'package:flutter_g1_l3/view/login.dart';
@@ -15,8 +16,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // static final myDB = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
-  static final myDB = Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test"); // Maxime J
 
   // This widget is the root of your application.
   @override
@@ -27,9 +26,10 @@ class MyApp extends StatelessWidget {
         LoginPage.tag : (context) => const LoginPage(title: "login"),
         EventPage.tag : (context) => const EventPage(title: "event"),
         ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
-        CoursPage.tag : (context) => const CoursPage(title: "cours"),
+        CoursPage.tag : (context) => const CoursPage(title: "Cours d'équitation"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
         UserProfile.tag : (context) => const UserProfile(title: "Page de profil"),
+        AdminPage.tag : (context) => const AdminPage(title: "Page admin"),
       },
       theme: ThemeData(
 

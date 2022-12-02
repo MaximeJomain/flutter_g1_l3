@@ -1,7 +1,7 @@
 import 'package:flutter_g1_l3/tables/tableEvent.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/tables/tableCours.dart';
 import 'package:flutter_g1_l3/tables/tableConcours.dart';
-
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Database {
@@ -13,8 +13,8 @@ class Database {
 
   Database(this.user, this.pwd, this.host, this.nameDB);
 
-  static Database instance =
-      Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test");
+   static Database instance =
+       Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
 
   _etablishConnection() async {
     db = await Db.create(
@@ -55,11 +55,27 @@ class Database {
     }
     var collection = db.collection(myCollec);
     await collection.insertOne({
-      "_id": ObjectId(),
-      "username": "${concours.name}",
-      "password": "${concours.adress}",
+      "name": "${concours.name}",
+      "adress": "${concours.adress}",
       "picture": "${concours.picture}",
-      "email": "${concours.date}"
+      "date": "${concours.date}",
+      "level": "${concours.level}"
+    });
+  }
+
+  createCours(String myCollec, Cours cours) async {
+    if (db == null) {
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "land": "${cours.land}",
+      "date": "${cours.date}",
+      "schedule": "${cours.schedule}",
+      "duration": "${cours.duration}",
+      "discipline": "${cours.discipline}"
     });
   }
 
@@ -70,9 +86,7 @@ class Database {
     }
     var collection = db.collection(myCollec);
     await collection.insertOne({
-      "_id": ObjectId(),
       "type": event.type,
-      // "participants": event.participants,
       "validate": event.validate,
     });
   }

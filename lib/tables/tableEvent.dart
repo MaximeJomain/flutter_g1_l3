@@ -1,13 +1,9 @@
 class Event {
 
   late String type;
-  // late Map participants;
-  // late DateTime date;
        bool validate;
 
   Event(this.type,
-      // this.participants,
-      // this.date,
       this.validate);
 
   String get getType => type;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/tables/tableConcours.dart';
-
 import '../database.dart';
+import 'package:flutter_g1_l3/main.dart';
+
 
 class ConcoursPage extends StatefulWidget {
 
@@ -16,15 +17,23 @@ class ConcoursPage extends StatefulWidget {
 }
 
 class _ConcoursPageState extends State<ConcoursPage> {
-  static List<Concours> concoursList = [];
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController adressController = TextEditingController();
-  final TextEditingController pictureController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
+  List<Concours> concoursList = [];
 
-  void _incrementCounter() {
+  var participants = 0;
+
+  Future<List<Concours>> isFindConcours() async {
+
+    final result = await Database.instance.getCollection("concours");
+    for (var item in result) {
+      final concours = Concours(item['name'], item['adress'], item['picture'], item['date'], item['level']);
+      concoursList.add(concours);
+    }
+    return concoursList;
+  }
+
+  increment() {
     setState(() {
+      participants++;
     });
   }
 
@@ -32,44 +41,87 @@ class _ConcoursPageState extends State<ConcoursPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ListView.builder(
-                itemCount: concoursList.length,
-                itemBuilder: (BuildContext context, int index) {
+      body: FutureBuilder(
+        future: isFindConcours(),
+        builder: (BuildContext context, AsyncSnapshot<List<Concours>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (_, index)  {
+                  var name = snapshot.data?[index].getName;
+                  var adress = snapshot.data?[index].getAdress;
+                  var picture = snapshot.data?[index].getPicture;
+                  var date = snapshot.data?[index].getDate;
+                  var level = snapshot.data?[index].getLevel;
                   return Card(
                     child: SizedBox(
-                      width: 500,
-                      height: 100,
+                      height: 300,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/images/dancefloor.jpeg"),
-                              Text(concoursList[index].getName)
-                            ],
+                          Container(
+                              height: 120,
+                              width: 120,
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                              ),
+                              child: Image.asset(picture!,
+                                  height: 120,
+                                  width: 120)
                           ),
-                          // Text(eventList[index].getParticipants),
+                              Text("Compétition : ${name!}",
+                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Padding(padding: const EdgeInsets.all(5),
+                              child: Text("Ville : ${adress!}")),
+                          Padding(padding: const EdgeInsets.all(5),
+                              child: Text("Niveau : ${level!}",
+                                  style: const TextStyle(color: Colors.brown))),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(padding: EdgeInsets.all(5),
+                                  child: Text("Nombre de participants: ${participants}")),
+                              TextButton(
+                                  onPressed: () {
+                                    increment();
+                                  },
+                                  child: Text("M'inscrire"))
+                            ]
+                          )
                         ],
                       ),
-                    ),
-                  );
-                }
-            ),
-          ],
-        ),
+                    ));
+                },
+            );
+          } else if (snapshot.hasError) {
+            return Container();
+          } else {
+            return Container();
+          }
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => ConcoursForm(),
-        ),
-        tooltip: 'Ajouter un concours',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+          FloatingActionButton(
+          onPressed: () {
+           isFindConcours();
+          },
+      tooltip: "refresh list",
+      backgroundColor: Colors.brown,
+      child: const Icon(Icons.refresh),
+    ),
+            FloatingActionButton(
+              onPressed: ()  {
+                showDialog<String>(
+                  context: context,
+                    builder: (BuildContext context) => const ConcoursForm(),
+                );
+              },
+              tooltip: 'Ajouter un concours',
+              child: const Icon(Icons.add),
+            ),
+      ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -204,7 +256,7 @@ class ConcoursFormState extends State<ConcoursForm> {
               child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (nameController.text != "" && adressController.text != "" && dateController.text != ""){
+                    if (nameController.text != "" && adressController.text != "" && dateController.text != "" && pictureController.text != ""){
                       Database.instance.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
