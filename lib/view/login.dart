@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/database.dart';
-import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
 import 'package:flutter_g1_l3/view/actualites.dart';
 
@@ -35,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     for (var e in usersList) {
       if (e.username == usernameController.text &&
           e.password == passwordController.text) {
-        Navigator.of(context).pushNamed(ActualitePage.tag);
+        Navigator.of(context).pushNamed(ActualitePage.tag, arguments: e.type);
       }
     }
   }
