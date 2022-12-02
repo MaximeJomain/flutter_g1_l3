@@ -1,4 +1,5 @@
 import 'package:flutter_g1_l3/tables/tableUser.dart';
+import 'package:flutter_g1_l3/tables/tableCours.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Database{
@@ -34,13 +35,29 @@ class Database{
     var collection = db.collection(myCollec);
     await collection.insertOne({
       "_id": ObjectId(),
-      "username": "${user.username}",
+      "coursname": "${user.username}",
       "password": "${user.password}",
-    "picture": "${user.picture}",
+      "picture": "${user.picture}",
       "email": "${user.email}",
       "phone":"${user.phone}",
       "old": "${user.old}",
       "type": "${user.type}"
+    });
+  }
+
+  createCours(String myCollec, Cours cours) async{
+    if(db == null){
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
+      "_id": ObjectId(),
+      "land": "${cours.land}",
+      "date": "${cours.date}",
+      "schedule": "${cours.schedule}",
+      "duration": "${cours.duration}",
+      "discipline":"${cours.discipline}"
     });
   }
 
