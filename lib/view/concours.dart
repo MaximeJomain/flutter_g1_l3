@@ -19,16 +19,15 @@ class ConcoursPage extends StatefulWidget {
 class _ConcoursPageState extends State<ConcoursPage> {
   List<Concours> concoursList = [];
 
+  var participants = 0;
+
   Future<List<Concours>> isFindConcours() async {
 
-    print("oui");
     final result = await MyApp.myDB.getCollection("concours");
     for (var item in result) {
-
       final concours = Concours(item['name'], item['adress'], item['picture'], item['date'], item['level']);
       concoursList.add(concours);
     }
-    print(concoursList);
     return concoursList;
   }
 
@@ -38,12 +37,11 @@ class _ConcoursPageState extends State<ConcoursPage> {
     super.initState();
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController adressController = TextEditingController();
-  final TextEditingController pictureController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-
+  increment() {
+    setState(() {
+      participants++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,20 +66,29 @@ class _ConcoursPageState extends State<ConcoursPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                             Padding(padding: EdgeInsets.all(5),
-                                child: Text(name!,
-                                    style: const TextStyle(fontWeight: FontWeight.bold))),
-                          Padding(padding: EdgeInsets.all(5),
-                              child: Text(adress!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold))),
-                          Padding(padding: EdgeInsets.all(5),
-                              child: Text(picture!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold))),
-                          Padding(padding: EdgeInsets.all(5),
-                              child: Text(date!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold))),
-                          Padding(padding: EdgeInsets.all(5),
+                                child: Text(picture!)),
+                          Row(
+                            children: [
+                              Text(name!,
+                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Padding(padding: const EdgeInsets.all(5),
+                              child: Text(adress!)),
+                            ],
+                          ),
+                          Padding(padding: const EdgeInsets.all(5),
                               child: Text(level!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold))),
+                                  style: const TextStyle(color: Colors.brown))),
+                          Row(
+                            children: [
+                              Padding(padding: EdgeInsets.all(5),
+                                  child: Text("Nombre de participants: ${participants}")),
+                              TextButton(
+                                  onPressed: () {
+                                    increment();
+                                  },
+                                  child: Text("M'inscrire"))
+                            ]
+                          )
                         ],
                       ),
                     ),
@@ -103,7 +110,7 @@ class _ConcoursPageState extends State<ConcoursPage> {
           await isFindConcours();
           },
       tooltip: "refresh list",
-      backgroundColor: Colors.purple,
+      backgroundColor: Colors.brown,
       child: const Icon(Icons.refresh),
     ),
             FloatingActionButton(

@@ -92,10 +92,12 @@ class _EventPageState extends State<EventPage> {
                                     Padding(padding: const EdgeInsets.all(5),
                                       child: Text(theme!,
                                       style: const TextStyle(fontWeight: FontWeight.bold))),
-                                    const Padding(padding: EdgeInsets.all(5),
+                                     Padding(padding: EdgeInsets.all(5),
                                         child: Text("Nombre de participants: ${participants}")),
                                     TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          increment();
+                                        },
                                         child: Text("M'inscrire"))
                               ])
                             ],
