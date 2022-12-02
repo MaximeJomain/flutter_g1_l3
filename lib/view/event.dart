@@ -20,7 +20,6 @@ class _EventPageState extends State<EventPage> {
   List<Event> eventList = [];
 
   Future<List<Event>> isFindEvent() async {
-    List<Event> eventList = [];
     final result = await MyApp.myDB.getCollection("event");
     for (var item in result) {
       final event = Event(item['type'], item['validate']);
@@ -34,6 +33,14 @@ class _EventPageState extends State<EventPage> {
     isFindEvent();
     super.initState();
   }
+
+  choicePicture(theme) {
+      if(theme.contains("jeux")) return "assets/images/jeux.jpeg";
+      if(theme.contains("repas")) return "assets/images/repas.jpeg";
+      if(theme.contains("dancefloor")) return "assets/images/dancefloor.jpeg";
+      return "";
+
+    }
 
   EventName? event = EventName.dancefloor;
 
@@ -65,16 +72,16 @@ class _EventPageState extends State<EventPage> {
                               Container(
                                 height: 120,
                                 width: 120,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(8.0))
                                 ),
-                                child: Image.asset("assets/images/jeux.jpeg",
+                                child: Image.asset(choicePicture(theme),
                                   height: 120,
                                   width: 120)
                               ),
                               Column(
                                   children: [
-                                    Padding(padding: EdgeInsets.all(5),
+                                    Padding(padding: const EdgeInsets.all(5),
                                       child: Text(theme!,
                                       style: const TextStyle(fontWeight: FontWeight.bold))),
                                     const Padding(padding: EdgeInsets.all(5),
@@ -108,7 +115,7 @@ class _EventPageState extends State<EventPage> {
       ),
       FloatingActionButton(
         onPressed: ()  {
-          showDialog<String>(
+          showDialog<void>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
             title: const Text("Indiquez le type de soirée voulu"),
