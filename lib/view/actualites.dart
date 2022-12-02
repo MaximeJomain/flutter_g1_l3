@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/view/login.dart';
+import 'package:flutter_g1_l3/view/admin.dart';
 import 'package:flutter_g1_l3/view/event.dart';
 import 'package:flutter_g1_l3/view/concours.dart';
 import 'package:flutter_g1_l3/view/cours.dart';
@@ -21,13 +21,23 @@ class _ActualitePageState extends State<ActualitePage> {
 
   List actualiteList = [];
 
-  void _incrementCounter() {
-    setState(() {
-    });
+  Widget _isAdmin({required String type}){
+    if (type == "admin") {
+      return IconButton(
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pushNamed(AdminPage.tag),
+          icon: const Icon(Icons.lock));
+    }
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    String userType = ModalRoute.of(context)!.settings.arguments as String;
+
+    print(userType);
+
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -35,10 +45,6 @@ class _ActualitePageState extends State<ActualitePage> {
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              IconButton(
-                  color: Colors.white,
-                  onPressed: () => Navigator.of(context).pushNamed(ActualitePage.tag),
-                  icon: const Icon(Icons.home)),
               IconButton(
                   color: Colors.white,
                   onPressed: () => Navigator.of(context).pushNamed(EventPage.tag),
@@ -55,6 +61,7 @@ class _ActualitePageState extends State<ActualitePage> {
                   color: Colors.white,
                   onPressed: () => Navigator.of(context).pushNamed(UserProfile.tag),
                   icon: const Icon(Icons.edit)),
+              _isAdmin(type: userType),
             ],
           )
       ),

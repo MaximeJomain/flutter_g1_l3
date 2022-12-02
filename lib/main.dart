@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/database.dart';
+import 'package:flutter_g1_l3/view/admin.dart';
 import 'package:flutter_g1_l3/view/sign_up.dart';
 import 'package:flutter_g1_l3/view/actualites.dart';
 import 'package:flutter_g1_l3/view/login.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         CoursPage.tag : (context) => const CoursPage(title: "Cours d'équitation"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
         UserProfile.tag : (context) => const UserProfile(title: "Page de profil"),
+        AdminPage.tag : (context) => const AdminPage(title: "Page admin"),
       },
       theme: ThemeData(
 

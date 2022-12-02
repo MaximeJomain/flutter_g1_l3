@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableCours.dart';
 import 'package:flutter_g1_l3/database.dart';
 
