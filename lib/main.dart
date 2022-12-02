@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
 
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
       ),
       home: const MySignupPage(title: "Inscription"),
     );
