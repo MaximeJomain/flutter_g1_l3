@@ -6,6 +6,7 @@ import 'package:flutter_g1_l3/view/login.dart';
 import 'package:flutter_g1_l3/view/event.dart';
 import 'package:flutter_g1_l3/view/concours.dart';
 import 'package:flutter_g1_l3/view/cours.dart';
+import 'package:flutter_g1_l3/view/user_profile.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -15,6 +16,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   static final myDB = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
+  // static final myDB = Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test"); // Maxime J
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,13 +29,13 @@ class MyApp extends StatelessWidget {
         ConcoursPage.tag : (context) => const ConcoursPage(title: "concours"),
         CoursPage.tag : (context) => const CoursPage(title: "cours"),
         ActualitePage.tag : (context) => const ActualitePage(title: "actualites"),
-
+        UserProfile.tag : (context) => const UserProfile(title: "Page de profil"),
       },
       theme: ThemeData(
 
         primarySwatch: Colors.blue,
       ),
-      home: MySignupPage(title: "Page d'inscription"),
+      home: const MySignupPage(title: "Page d'inscription"),
     );
   }
 }

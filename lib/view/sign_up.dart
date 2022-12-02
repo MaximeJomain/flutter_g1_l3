@@ -112,9 +112,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
+                      // the form is invalid
                       if (_formKey.currentState!.validate()) {
-                        // Process data.
+                        // Process data
                         Database.instance.createUser("users", User(usernameController.text, passwordController.text, pictureController.text, emailController.text, "", "", ""));
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text(
@@ -125,12 +125,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     child: const Text('Submit'),
                   ),
                 ),
-                IconButton(
-                    color: Colors.black,
-                    onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
-                    icon: const Icon(Icons.book)),
-              ],
-            ),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+                  onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
+                  child: const Text("Already an account ?",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ))),
+            ])
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_g1_l3/view/login.dart';
 import 'package:flutter_g1_l3/view/event.dart';
 import 'package:flutter_g1_l3/view/concours.dart';
 import 'package:flutter_g1_l3/view/cours.dart';
+import 'package:flutter_g1_l3/view/user_profile.dart';
 
 class ActualitePage extends StatefulWidget {
 
@@ -49,6 +50,10 @@ class _ActualitePageState extends State<ActualitePage> {
               IconButton(
                   color: Colors.white,
                   onPressed: () => Navigator.of(context).pushNamed(CoursPage.tag),
+                  icon: const Icon(Icons.book)),
+              IconButton(
+                  color: Colors.white,
+                  onPressed: () => Navigator.of(context).pushNamed(UserProfile.tag),
                   icon: const Icon(Icons.book)),
             ],
           )
