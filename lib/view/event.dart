@@ -19,6 +19,8 @@ enum EventName { dancefloor, jeux, repas }
 class _EventPageState extends State<EventPage> {
   List<Event> eventList = [];
 
+  var participants = 0;
+
   Future<List<Event>> isFindEvent() async {
     final result = await MyApp.myDB.getCollection("event");
     for (var item in result) {
@@ -40,6 +42,12 @@ class _EventPageState extends State<EventPage> {
       if(theme.contains("dancefloor")) return "assets/images/dancefloor.jpeg";
       return "";
 
+    }
+
+    increment() {
+    setState(() {
+      participants++;
+    });
     }
 
   EventName? event = EventName.dancefloor;
@@ -85,7 +93,10 @@ class _EventPageState extends State<EventPage> {
                                       child: Text(theme!,
                                       style: const TextStyle(fontWeight: FontWeight.bold))),
                                     const Padding(padding: EdgeInsets.all(5),
-                                        child: Text("Nombre de participants: ?")),
+                                        child: Text("Nombre de participants: ${participants}")),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: Text("M'inscrire"))
                               ])
                             ],
                           ),
