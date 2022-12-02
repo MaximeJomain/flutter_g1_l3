@@ -19,7 +19,7 @@ enum EventName { dancefloor, jeux, repas }
 class _EventPageState extends State<EventPage> {
   List<Event> eventList = [];
 
-  var participants = 0;
+  var participantEvent = 0;
 
   Future<List<Event>> isFindEvent() async {
     final result = await MyApp.myDB.getCollection("event");
@@ -30,23 +30,16 @@ class _EventPageState extends State<EventPage> {
     return eventList;
   }
 
-  @override
-  void initState() {
-    isFindEvent();
-    super.initState();
-  }
-
   choicePicture(theme) {
       if(theme.contains("jeux")) return "assets/images/jeux.jpeg";
       if(theme.contains("repas")) return "assets/images/repas.jpeg";
       if(theme.contains("dancefloor")) return "assets/images/dancefloor.jpeg";
       return "";
-
     }
 
     increment() {
     setState(() {
-      participants++;
+      participantEvent++;
     });
     }
 
@@ -92,8 +85,8 @@ class _EventPageState extends State<EventPage> {
                                     Padding(padding: const EdgeInsets.all(5),
                                       child: Text(theme!,
                                       style: const TextStyle(fontWeight: FontWeight.bold))),
-                                     Padding(padding: EdgeInsets.all(5),
-                                        child: Text("Nombre de participants: ${participants}")),
+                                     Padding(padding: const EdgeInsets.all(5),
+                                        child: Text("Nombre de participants: ${participantEvent}")),
                                     TextButton(
                                         onPressed: () {
                                           increment();
@@ -175,8 +168,7 @@ class _EventPageState extends State<EventPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Database.instance
-                            .createEvent("event", Event("${event}", false));
+                        MyApp.myDB.createEvent("event", Event("${event}", false));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:

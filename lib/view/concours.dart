@@ -31,12 +31,6 @@ class _ConcoursPageState extends State<ConcoursPage> {
     return concoursList;
   }
 
-  @override
-  void initState() {
-    isFindConcours();
-    super.initState();
-  }
-
   increment() {
     setState(() {
       participants++;
@@ -61,24 +55,29 @@ class _ConcoursPageState extends State<ConcoursPage> {
                   var level = snapshot.data?[index].getLevel;
                   return Card(
                     child: SizedBox(
-                      height: 150,
+                      height: 300,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                            Padding(padding: EdgeInsets.all(5),
-                                child: Text(picture!)),
-                          Row(
-                            children: [
-                              Text(name!,
+                          Container(
+                              height: 120,
+                              width: 120,
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                              ),
+                              child: Image.asset(picture!,
+                                  height: 120,
+                                  width: 120)
+                          ),
+                              Text("Compétition : ${name!}",
                               style: const TextStyle(fontWeight: FontWeight.bold)),
                               Padding(padding: const EdgeInsets.all(5),
-                              child: Text(adress!)),
-                            ],
-                          ),
+                              child: Text("Ville : ${adress!}")),
                           Padding(padding: const EdgeInsets.all(5),
-                              child: Text(level!,
+                              child: Text("Niveau : ${level!}",
                                   style: const TextStyle(color: Colors.brown))),
                           Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(padding: EdgeInsets.all(5),
                                   child: Text("Nombre de participants: ${participants}")),
@@ -91,9 +90,8 @@ class _ConcoursPageState extends State<ConcoursPage> {
                           )
                         ],
                       ),
-                    ),
-                  );
-                }
+                    ));
+                },
             );
           } else if (snapshot.hasError) {
             return Container();
@@ -106,8 +104,8 @@ class _ConcoursPageState extends State<ConcoursPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
           FloatingActionButton(
-          onPressed: () async {
-          await isFindConcours();
+          onPressed: () {
+           isFindConcours();
           },
       tooltip: "refresh list",
       backgroundColor: Colors.brown,
@@ -259,7 +257,7 @@ class ConcoursFormState extends State<ConcoursForm> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (nameController.text != "" && adressController.text != "" && dateController.text != "" && pictureController.text != ""){
-                      Database.instance.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
+                      MyApp.myDB.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content:

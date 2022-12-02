@@ -13,8 +13,8 @@ class Database {
 
   Database(this.user, this.pwd, this.host, this.nameDB);
 
-  static Database instance =
-      Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test");
+  // static Database instance =
+  //     Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
 
   _etablishConnection() async {
     db = await Db.create(
@@ -73,7 +73,6 @@ class Database {
     await collection.insertOne({
       "_id": ObjectId(),
       "type": event.type,
-      // "participants": event.participants,
       "validate": event.validate,
     });
   }
