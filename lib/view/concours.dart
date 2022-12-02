@@ -23,7 +23,7 @@ class _ConcoursPageState extends State<ConcoursPage> {
 
   Future<List<Concours>> isFindConcours() async {
 
-    final result = await MyApp.myDB.getCollection("concours");
+    final result = await Database.instance.getCollection("concours");
     for (var item in result) {
       final concours = Concours(item['name'], item['adress'], item['picture'], item['date'], item['level']);
       concoursList.add(concours);
@@ -257,7 +257,7 @@ class ConcoursFormState extends State<ConcoursForm> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (nameController.text != "" && adressController.text != "" && dateController.text != "" && pictureController.text != ""){
-                      MyApp.myDB.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
+                      Database.instance.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content:

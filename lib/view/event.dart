@@ -22,7 +22,7 @@ class _EventPageState extends State<EventPage> {
   var participantEvent = 0;
 
   Future<List<Event>> isFindEvent() async {
-    final result = await MyApp.myDB.getCollection("event");
+    final result = await Database.instance.getCollection("event");
     for (var item in result) {
       final event = Event(item['type'], item['validate']);
       eventList.add(event);
@@ -168,7 +168,7 @@ class _EventPageState extends State<EventPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        MyApp.myDB.createEvent("event", Event("${event}", false));
+                        Database.instance.createEvent("event", Event("${event}", false));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:

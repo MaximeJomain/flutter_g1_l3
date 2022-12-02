@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/main.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
 import 'package:flutter_g1_l3/view/actualites.dart';
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<List<User>> isFindUser() async {
-    List result = await MyApp.myDB.getCollection("users");
+    List result = await Database.instance.getCollection("users");
     for (var item in result) {
       final user = User(item['username'], item['password'], item['picture'],
           item['email'], item['phone'], item['old'], item['type']);

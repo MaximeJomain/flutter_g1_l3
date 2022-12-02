@@ -25,7 +25,7 @@ class _CoursPageState extends State<CoursPage> {
   String? discipline;
 
   Future<List<Cours>> isFindCours() async {
-    final result = await MyApp.myDB.getCollection("cours");
+    final result = await Database.instance.getCollection("cours");
     for (var item in result) {
       final cours = Cours(item['land'], item['date'], item['schedule'],
           item['duration'], item['discipline']);

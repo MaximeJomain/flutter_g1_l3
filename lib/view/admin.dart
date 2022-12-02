@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/view/login.dart';
 import 'package:flutter_g1_l3/view/event.dart';
 import 'package:flutter_g1_l3/view/concours.dart';
 import 'package:flutter_g1_l3/view/cours.dart';
 import 'package:flutter_g1_l3/view/user_profile.dart';
 
-class ActualitePage extends StatefulWidget {
+class AdminPage extends StatefulWidget {
 
-  static const tag = "actualite_page";
+  static const tag = "admin_page";
 
-  const ActualitePage({super.key, required this.title});
+  const AdminPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ActualitePage> createState() => _ActualitePageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _ActualitePageState extends State<ActualitePage> {
+class _AdminPageState extends State<AdminPage> {
 
-  List actualiteList = [];
-
-  void _incrementCounter() {
-    setState(() {
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +30,7 @@ class _ActualitePageState extends State<ActualitePage> {
             children: <Widget>[
               IconButton(
                   color: Colors.white,
-                  onPressed: () => Navigator.of(context).pushNamed(ActualitePage.tag),
+                  onPressed: () => Navigator.of(context).pushNamed(AdminPage.tag),
                   icon: const Icon(Icons.home)),
               IconButton(
                   color: Colors.white,
@@ -54,7 +47,7 @@ class _ActualitePageState extends State<ActualitePage> {
               IconButton(
                   color: Colors.white,
                   onPressed: () => Navigator.of(context).pushNamed(UserProfile.tag),
-                  icon: const Icon(Icons.edit)),
+                  icon: const Icon(Icons.book)),
             ],
           )
       ),

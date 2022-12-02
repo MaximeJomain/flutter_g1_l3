@@ -13,8 +13,8 @@ class Database {
 
   Database(this.user, this.pwd, this.host, this.nameDB);
 
-  // static Database instance =
-  //     Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
+   static Database instance =
+       Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
 
   _etablishConnection() async {
     db = await Db.create(
@@ -55,18 +55,6 @@ class Database {
     }
     var collection = db.collection(myCollec);
     await collection.insertOne({
-      "_id": ObjectId(),
-      "coursname": "${user.username}",
-      "password": "${user.password}",
-      "picture": "${user.picture}",
-      "email": "${user.email}",
-      "phone":"${user.phone}",
-      "old": "${user.old}",
-      "type": "${user.type}"
-    });
-  }
-
-  createCours(String myCollec, Cours cours) async{
       "name": "${concours.name}",
       "adress": "${concours.adress}",
       "picture": "${concours.picture}",
@@ -75,8 +63,8 @@ class Database {
     });
   }
 
-  createEvent(String myCollec, Event event) async{
-    if(db == null){
+  createCours(String myCollec, Cours cours) async {
+    if (db == null) {
       await _etablishConnection();
       print("nouvelle connexion");
     }
@@ -87,10 +75,17 @@ class Database {
       "date": "${cours.date}",
       "schedule": "${cours.schedule}",
       "duration": "${cours.duration}",
-      "discipline":"${cours.discipline}"
+      "discipline": "${cours.discipline}"
     });
   }
 
+  createEvent(String myCollec, Event event) async{
+    if(db == null){
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection(myCollec);
+    await collection.insertOne({
       "type": event.type,
       "validate": event.validate,
     });

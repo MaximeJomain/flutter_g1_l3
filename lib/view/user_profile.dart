@@ -32,7 +32,7 @@ class _UserProfileState extends State<UserProfile> {
   final TextEditingController ffeLinkController = TextEditingController();
 
   Future<List<Horse>> getHorsesList() async {
-    List result = await MyApp.myDB.getCollection("horses");
+    List result = await Database.instance.getCollection("horses");
     if (horsesList.isEmpty) {
       for (var item in result) {
         final horse = Horse(item['name']);
@@ -85,7 +85,7 @@ class _UserProfileState extends State<UserProfile> {
             TextButton(
               child: const Text('Approve'),
               onPressed: () {
-                MyApp.myDB.updateHorseOwner(username, horseName);
+                Database.instance.updateHorseOwner(username, horseName);
                 Navigator.of(context).pop();
               },
             ),
@@ -140,7 +140,7 @@ class _UserProfileState extends State<UserProfile> {
               child: const Text('Approve'),
               onPressed: () {
                 for (var horseName in selectedHorses) {
-                  MyApp.myDB.updateHorseOwner(username, horseName);
+                  Database.instance.updateHorseOwner(username, horseName);
                 }
                 Navigator.of(context).pop();
               },
@@ -212,7 +212,7 @@ class _UserProfileState extends State<UserProfile> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            MyApp.myDB.updateUserInfo(
+                            Database.instance.updateUserInfo(
                                 username,
                                 phoneNumberController.text,
                                 ageController.text,
