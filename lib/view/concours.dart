@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/tables/tableConcours.dart';
-
 import '../database.dart';
+import 'package:flutter_g1_l3/main.dart';
+
 
 class ConcoursPage extends StatefulWidget {
 
@@ -16,60 +17,106 @@ class ConcoursPage extends StatefulWidget {
 }
 
 class _ConcoursPageState extends State<ConcoursPage> {
-  static List<Concours> concoursList = [];
+  List<Concours> concoursList = [];
+
+  Future<List<Concours>> isFindConcours() async {
+
+    print("oui");
+    final result = await MyApp.myDB.getCollection("concours");
+    for (var item in result) {
+
+      final concours = Concours(item['name'], item['adress'], item['picture'], item['date'], item['level']);
+      concoursList.add(concours);
+    }
+    print(concoursList);
+    return concoursList;
+  }
+
+  @override
+  void initState() {
+    isFindConcours();
+    super.initState();
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController adressController = TextEditingController();
   final TextEditingController pictureController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ListView.builder(
-                itemCount: concoursList.length,
-                itemBuilder: (BuildContext context, int index) {
+      body: FutureBuilder(
+        future: isFindConcours(),
+        builder: (BuildContext context, AsyncSnapshot<List<Concours>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (_, index)  {
+                  var name = snapshot.data?[index].getName;
+                  var adress = snapshot.data?[index].getAdress;
+                  var picture = snapshot.data?[index].getPicture;
+                  var date = snapshot.data?[index].getDate;
+                  var level = snapshot.data?[index].getLevel;
                   return Card(
                     child: SizedBox(
-                      width: 500,
-                      height: 100,
+                      height: 150,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/images/dancefloor.jpeg"),
-                              Text(concoursList[index].getName)
-                            ],
-                          ),
-                          // Text(eventList[index].getParticipants),
+                            Padding(padding: EdgeInsets.all(5),
+                                child: Text(name!,
+                                    style: const TextStyle(fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(5),
+                              child: Text(adress!,
+                                  style: const TextStyle(fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(5),
+                              child: Text(picture!,
+                                  style: const TextStyle(fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(5),
+                              child: Text(date!,
+                                  style: const TextStyle(fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(5),
+                              child: Text(level!,
+                                  style: const TextStyle(fontWeight: FontWeight.bold))),
                         ],
                       ),
                     ),
                   );
                 }
-            ),
-          ],
-        ),
+            );
+          } else if (snapshot.hasError) {
+            return Container();
+          } else {
+            return Container();
+          }
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => ConcoursForm(),
-        ),
-        tooltip: 'Ajouter un concours',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+          FloatingActionButton(
+          onPressed: () async {
+          await isFindConcours();
+          },
+      tooltip: "refresh list",
+      backgroundColor: Colors.purple,
+      child: const Icon(Icons.refresh),
+    ),
+            FloatingActionButton(
+              onPressed: ()  {
+                showDialog<String>(
+                  context: context,
+                    builder: (BuildContext context) => const ConcoursForm(),
+                );
+              },
+              tooltip: 'Ajouter un concours',
+              child: const Icon(Icons.add),
+            ),
+      ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -204,7 +251,7 @@ class ConcoursFormState extends State<ConcoursForm> {
               child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (nameController.text != "" && adressController.text != "" && dateController.text != ""){
+                    if (nameController.text != "" && adressController.text != "" && dateController.text != "" && pictureController.text != ""){
                       Database.instance.createConcours("concours", Concours(nameController.text,adressController.text, pictureController.text, dateController.text, "${level}"));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

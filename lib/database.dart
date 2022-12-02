@@ -54,10 +54,11 @@ class Database{
     var collection = db.collection(myCollec);
     await collection.insertOne({
       "_id": ObjectId(),
-      "username": "${concours.name}",
-      "password": "${concours.adress}",
+      "name": "${concours.name}",
+      "adress": "${concours.adress}",
       "picture": "${concours.picture}",
-      "email": "${concours.date}"
+      "date": "${concours.date}",
+      "level": "${concours.level}"
     });
   }
 
