@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/main.dart';
+import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/tables/tableUser.dart';
 import 'package:flutter_g1_l3/view/login.dart';
 
@@ -115,7 +115,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       // the form is invalid
                       if (_formKey.currentState!.validate()) {
                         // Process data
-                        MyApp.myDB.createUser("users", User(usernameController.text, passwordController.text, pictureController.text, emailController.text, "", "", ""));
+                        Database.instance.createUser("users", User(usernameController.text, passwordController.text, pictureController.text, emailController.text, "", "", ""));
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text(
                                 'Votre compte a bien été crée')));

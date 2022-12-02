@@ -15,8 +15,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  static final myDB = Database("test", "test", "cluster0.qhfwu3w.mongodb.net", "test");
-  // static final myDB = Database("test", "test", "cluster0.dbdsp9o.mongodb.net", "test"); // Maxime J
 
   // This widget is the root of your application.
   @override
