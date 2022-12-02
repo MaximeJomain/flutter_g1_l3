@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_g1_l3/main.dart';
 
+import '../database.dart';
 import '../tables/tableHorse.dart';
 
 class UserProfile extends StatefulWidget {
@@ -206,7 +207,7 @@ class _UserProfileState extends State<UserProfile> {
               child: const Text('Valider'),
               onPressed: () {
                 for (var horseName in selectedHorses) {
-                  MyApp.myDB.updateHorseOwner(username, horseName);
+                  Database.instance.updateHorseOwner(username, horseName);
                 }
                 Navigator.of(context).pop();
               },
