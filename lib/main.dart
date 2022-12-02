@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: const UserProfile(title: "Page de profil"),
+      home: const MySignupPage(title: "Inscription"),
     );
   }
 }
