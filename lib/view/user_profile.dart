@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_g1_l3/database.dart';
 import 'package:flutter_g1_l3/main.dart';
-import 'package:flutter_g1_l3/tables/tableUser.dart';
-import 'package:get_storage/get_storage.dart';
 
 import '../tables/tableHorse.dart';
 
@@ -19,11 +16,18 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _editFormKey = GlobalKey<FormState>();
+
 
   List<bool?> _isChecked = [];
   String username = "user2";
   List<Horse> horsesList = [];
   List<String> selectedHorses = [];
+  List<Horse> ownerHorsesList = [
+    Horse("machin", null, "noir", "femelle", "saut"),
+    Horse("truc", null, "bai", "male", "s aut")
+  ];
+
   String? _type;
   String? _horseName;
 
@@ -31,6 +35,10 @@ class _UserProfileState extends State<UserProfile> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController ffeLinkController = TextEditingController();
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController dressController = TextEditingController();
+  final TextEditingController sexController = TextEditingController();
+  final TextEditingController specialityController = TextEditingController();
   Future<List<Horse>> getHorsesList() async {
     List result = await Database.instance.getCollection("horses");
     if (horsesList.isEmpty) {
@@ -83,7 +91,7 @@ class _UserProfileState extends State<UserProfile> {
           }),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('Valider'),
               onPressed: () {
                 Database.instance.updateHorseOwner(username, horseName);
                 Navigator.of(context).pop();
@@ -137,7 +145,7 @@ class _UserProfileState extends State<UserProfile> {
           }),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('Valider'),
               onPressed: () {
                 for (var horseName in selectedHorses) {
                   Database.instance.updateHorseOwner(username, horseName);
@@ -149,6 +157,70 @@ class _UserProfileState extends State<UserProfile> {
         );
       },
     );
+  }
+
+  Future<void> _editDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editer le cheval'),
+          content: Form(
+            key: _editFormKey,
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    labelText: 'Nom',
+                  ),
+                ),
+                TextFormField(
+                  controller: dressController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    labelText: 'Robe',
+                  ),
+                ),
+                TextFormField(
+                  controller: sexController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    labelText: 'Sexe',
+                  ),
+                ),
+                TextFormField(
+                  controller: specialityController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    labelText: 'Spécialité',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Valider'),
+              onPressed: () {
+                for (var horseName in selectedHorses) {
+                  MyApp.myDB.updateHorseOwner(username, horseName);
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -223,7 +295,7 @@ class _UserProfileState extends State<UserProfile> {
                                         'Vos informations on bien été modifiées')));
                           }
                         },
-                        child: const Text('Submit'),
+                        child: const Text('Valider'),
                       ),
                     ),
                     const Divider(),
@@ -273,34 +345,27 @@ class _UserProfileState extends State<UserProfile> {
                             children: <Widget>[
                               ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: 5,
+                                itemCount: ownerHorsesList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Card(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        const ListTile(
-                                          leading: Icon(Icons.album),
+                                        ListTile(
+                                          leading: const Icon(Icons.album),
                                           title:
-                                              Text('The Enchanted Nightingale'),
+                                              Text(ownerHorsesList[index].name),
                                           subtitle: Text(
-                                              'Music by Julie Gable. Lyrics by Sidney Stein.'),
+                                              "Robe: ${ownerHorsesList[index].dress} - Sexe: ${ownerHorsesList[index].sex} - Spécialité: ${ownerHorsesList[index].speciality}"),
                                         ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: <Widget>[
                                             TextButton(
-                                              child: const Text('BUY TICKETS'),
+                                              child: const Text('EDITER'),
                                               onPressed: () {
-                                                /* ... */
-                                              },
-                                            ),
-                                            const SizedBox(width: 8),
-                                            TextButton(
-                                              child: const Text('LISTEN'),
-                                              onPressed: () {
-                                                /* ... */
+                                                _editDialog();
                                               },
                                             ),
                                             const SizedBox(width: 8),

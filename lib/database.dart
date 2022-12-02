@@ -119,4 +119,15 @@ class Database {
         }
     );
   }
+
+  getOwnerHorses(String username) async {
+    if (db == null) {
+      await _etablishConnection();
+      print("nouvelle connexion");
+    }
+    var collection = db.collection("horses");
+    return await collection.find(where.eq('owner', username)).toList();
+
+  }
+
 }
